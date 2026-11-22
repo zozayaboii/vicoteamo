@@ -200,4 +200,167 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("pista-playlist").textContent = CONTENIDO.pistaPlaylist;
   document.getElementById("spotify-frame").src =
     `https://open.spotify.com/embed/playlist/${CONTENIDO.spotifyPlaylistId}?utm_source=generator&theme=0`;
+
+  // Mini bloc de dibujo
+  const canvas = document.getElementById("lienzo-dibujo");
+  if (canvas) {
+    const ctx = canvas.getContext("2d");
+    let dibujando = false;
+    let colorActual = "#1b1e2e";
+    let grosorActual = 4;
+
+    function iniciarPapel() {
+      canvas.width = canvas.clientWidth || 320;
+      canvas.height = 270;
+      ctx.fillStyle = "#f4eadc";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+    }
+
+    iniciarPapel();
+
+    function obtenerPosicion(e) {
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      };
+    }
+
+    canvas.addEventListener("pointerdown", (e) => {
+      dibujando = true;
+      const pos = obtenerPosicion(e);
+      ctx.beginPath();
+      ctx.moveTo(pos.x, pos.y);
+    });
+
+    canvas.addEventListener("pointermove", (e) => {
+      if (!dibujando) return;
+      const pos = obtenerPosicion(e);
+      ctx.strokeStyle = colorActual;
+      ctx.lineWidth = grosorActual;
+      ctx.lineTo(pos.x, pos.y);
+      ctx.stroke();
+    });
+
+    const detenerTrazo = () => { dibujando = false; };
+    canvas.addEventListener("pointerup", detenerTrazo);
+    canvas.addEventListener("pointerleave", detenerTrazo);
+
+    const botonesColor = document.querySelectorAll(".color-btn");
+    const btnGoma = document.getElementById("btn-goma");
+
+    botonesColor.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        botonesColor.forEach((b) => b.classList.remove("activo"));
+        btnGoma.classList.remove("activo");
+        btn.classList.add("activo");
+        colorActual = btn.dataset.color;
+        grosorActual = 4;
+      });
+    });
+
+    btnGoma.addEventListener("click", () => {
+      botonesColor.forEach((b) => b.classList.remove("activo"));
+      btnGoma.classList.add("activo");
+      colorActual = "#f4eadc";
+      grosorActual = 18;
+    });
+
+    document.getElementById("btn-limpiar").addEventListener("click", iniciarPapel);
+
+    document.getElementById("btn-descargar").addEventListener("click", () => {
+      const enlace = document.createElement("a");
+      enlace.download = "dibujo-vico.png";
+      enlace.href = canvas.toDataURL("image/png");
+      enlace.click();
+    });
+  }
+
+  // Efecto festivo de notas y formas
+  const festejoCanvas = document.getElementById("lienzo-festejo");
+  if (festejoCanvas) {
+    const fCtx = festejoCanvas.getContext("2d");
+    const colores = ["#f48fb1", "#6ec6ff", "#69d2a0", "#f4eadc"];
+    let particulas = [];
+    let animando = false;
+
+    function lanzarFestejo() {
+      festejoCanvas.width = window.innerWidth;
+      festejoCanvas.height = window.innerHeight;
+
+      for (let i = 0; i < 60; i++) {
+        particulas.push({
+          x: Math.random() * festejoCanvas.width,
+          y: -20 - Math.random() * 260,
+          velY: 2.2 + Math.random() * 2.8,
+          oscilacion: Math.random() * Math.PI * 2,
+          rotacion: Math.random() * Math.PI,
+          velRot: (Math.random() - 0.5) * 0.08,
+          color: colores[i % colores.length],
+          tipo: i % 3
+        });
+      }
+
+      if (!animando) {
+        animando = true;
+        animarFestejo();
+      }
+    }
+
+    function dibujarNota(ctx, x, y, color) {
+      ctx.fillStyle = color;
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.ellipse(x, y, 5, 3.5, -0.3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(x + 4, y);
+      ctx.lineTo(x + 4, y - 14);
+      ctx.lineTo(x + 10, y - 11);
+      ctx.stroke();
+    }
+
+    function animarFestejo() {
+      fCtx.clearRect(0, 0, festejoCanvas.width, festejoCanvas.height);
+
+      particulas.forEach((p) => {
+        p.y += p.velY;
+        p.oscilacion += 0.04;
+        p.x += Math.sin(p.oscilacion) * 1.1;
+        p.rotacion += p.velRot;
+
+        fCtx.save();
+        fCtx.translate(p.x, p.y);
+        fCtx.rotate(p.rotacion);
+
+        if (p.tipo === 0) {
+          dibujarNota(fCtx, 0, 0, p.color);
+        } else if (p.tipo === 1) {
+          fCtx.fillStyle = p.color;
+          fCtx.fillRect(-4, -4, 8, 8);
+        } else {
+          fCtx.fillStyle = p.color;
+          fCtx.beginPath();
+          fCtx.arc(0, 0, 4, 0, Math.PI * 2);
+          fCtx.fill();
+        }
+        fCtx.restore();
+      });
+
+      particulas = particulas.filter((p) => p.y < festejoCanvas.height + 30);
+
+      if (particulas.length > 0) {
+        requestAnimationFrame(animarFestejo);
+      } else {
+        animando = false;
+      }
+    }
+
+    lanzarFestejo();
+    document.getElementById("btn-festejo").addEventListener("click", lanzarFestejo);
+  }
 });
+    
