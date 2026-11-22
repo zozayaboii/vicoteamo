@@ -259,6 +259,76 @@ h1 {
   background: var(--tarjeta);
 }
 
+.bloc-caja {
+  background: var(--papel);
+  border: 2px solid var(--tinta);
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 6px 6px 0px var(--rosa);
+}
+
+.bloc-herramientas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.color-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--tinta);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.color-btn.activo {
+  transform: scale(1.18);
+  outline: 2px solid var(--azul);
+  outline-offset: 2px;
+}
+
+.accion-bloc {
+  background: #e5d5c0;
+  color: var(--tinta);
+  border: 1.5px solid var(--tinta);
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.accion-bloc.activo {
+  background: var(--azul);
+}
+
+#lienzo-dibujo {
+  display: block;
+  width: 100%;
+  height: 270px;
+  background: #f4eadc;
+  border: 1.5px dashed #b5a38d;
+  border-radius: 8px;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.btn-descargar {
+  margin-top: 12px;
+  width: 100%;
+  background: var(--tinta);
+  color: var(--papel);
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
 .modal {
   position: fixed;
   inset: 0;
@@ -310,5 +380,30 @@ h1 {
   padding: 6px 12px;
   font-size: 0.8rem;
   font-weight: 600;
+  cursor: pointer;
+}
+
+#lienzo-festejo {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 60;
+}
+
+.btn-festejo {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  z-index: 40;
+  background: var(--rosa);
+  color: var(--tinta);
+  border: 2px solid var(--tinta);
+  box-shadow: 4px 4px 0px var(--azul);
+  border-radius: 999px;
+  padding: 9px 16px;
+  font-size: 0.82rem;
+  font-weight: 700;
   cursor: pointer;
 }
