@@ -407,3 +407,19 @@ h1 {
   font-weight: 700;
   cursor: pointer;
 }
+.cierre-web {
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 1px dashed rgba(244, 143, 177, 0.35);
+  text-align: center;
+  color: var(--texto-suave);
+  font-size: 0.85rem;
+}
+
+.cierre-web span {
+  display: block;
+  margin-top: 4px;
+  color: var(--rosa);
+  font-weight: 600;
+}
+
