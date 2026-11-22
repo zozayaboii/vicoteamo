@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Felices 19, Vico</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,500&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="fondo-luces" aria-hidden="true"></div>
+
+  <main class="contenedor">
+    <header class="hero">
+      <span class="etiqueta-comic" id="subtitulo-hero"></span>
+      <h1 id="titulo-hero"></h1>
+      <div class="separador-arte">
+        <span></span><i></i><span></span>
+      </div>
+    </header>
+
+    <section class="tarjeta-principal">
+      <div id="carta-principal" class="texto-carta"></div>
+    </section>
+
+    <section class="bloque">
+      <h2>Cartas para abrir cuando...</h2>
+      <p class="bajada">Tocá cada sobre en el momento en que lo necesites.</p>
+      <div id="sobres-grid" class="grid-sobres"></div>
+    </section>
+
+    <section class="bloque">
+      <h2>Una playlist con mensaje oculto</h2>
+      <p id="pista-playlist" class="pista"></p>
+      <div class="marco-spotify">
+        <iframe
+          id="spotify-frame"
+          width="100%"
+          height="352"
+          frameborder="0"
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy">
+        </iframe>
+      </div>
+    </section>
+  </main>
+
+  <div id="modal" class="modal" role="dialog" aria-modal="true">
+    <div class="modal-caja">
+      <button id="cerrar-modal" class="btn-cerrar" aria-label="Cerrar">Cerrar</button>
+      <span id="modal-etiqueta" class="etiqueta-comic"></span>
+      <h3 id="modal-titulo"></h3>
+      <div id="modal-texto" class="texto-carta"></div>
+    </div>
+  </div>
+</body>
+</html>
