@@ -61,7 +61,7 @@ Escucha música, descansá la cabeza y acordate de que estoy acá para escuchart
       etiqueta: "Sobre 07 de 19",
       titulo: "Abrí si no podés dormir",
       texto: `Si te agarró el insomnio y la cabeza no para de dar vueltas, dejá el celular un ratito después de leer esto y respirá despacio.
-Pensa en que un bicho te va a agarrar si no dormís, corte el cuco, y conta hasta 10, QUE SOLUCION LE DABA NO? JALDKAKDJSK perdón 
+Pensa en que un bicho te va a agarrar si no dormís, corte el cuco, y conta hasta 10, QUE SOLUCION LE DABA NO? JALDKAKDJSK perdón`
     },
     {
       numero: "08",
