@@ -1,9 +1,11 @@
 :root {
-  --fondo: #11131d;
-  --tarjeta: #191c2b;
-  --borde: #2c314a;
+  --fondo: #0e1018;
+  --tarjeta: #171a26;
+  --papel: #f4eadc;
+  --papel-solapa: #e5d5c0;
+  --tinta: #1b1e2e;
   --texto: #f5f1ec;
-  --texto-suave: #b8bdd4;
+  --texto-suave: #bcc2d6;
   --rosa: #f48fb1;
   --azul: #6ec6ff;
   --verde: #69d2a0;
@@ -17,46 +19,45 @@
 
 body {
   background-color: var(--fondo);
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    radial-gradient(circle at 12% 15%, rgba(244, 143, 177, 0.16), transparent 38%),
+    radial-gradient(circle at 88% 28%, rgba(110, 198, 255, 0.16), transparent 40%),
+    radial-gradient(circle at 50% 85%, rgba(105, 210, 160, 0.12), transparent 45%);
+  background-size: 22px 22px, 100% 100%, 100% 100%, 100% 100%;
   color: var(--texto);
   font-family: 'Plus Jakarta Sans', sans-serif;
   line-height: 1.7;
   min-height: 100vh;
-  overflow-x: hidden;
-}
-
-.fondo-luces {
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(circle at 15% 20%, rgba(244, 143, 177, 0.14), transparent 40%),
-    radial-gradient(circle at 85% 30%, rgba(110, 198, 255, 0.14), transparent 42%),
-    radial-gradient(circle at 50% 85%, rgba(105, 210, 160, 0.10), transparent 45%);
-  pointer-events: none;
-  z-index: -1;
 }
 
 .contenedor {
-  max-width: 680px;
+  max-width: 720px;
   margin: 0 auto;
-  padding: 40px 20px 72px;
+  padding: 36px 18px 72px;
 }
 
 .hero {
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 34px;
+  padding: 22px 16px;
+  border: 1px dashed rgba(110, 198, 255, 0.35);
+  border-radius: 16px;
+  background: rgba(23, 26, 38, 0.65);
+  position: relative;
 }
 
 .etiqueta-comic {
   display: inline-block;
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: var(--azul);
-  border: 1px solid rgba(110, 198, 255, 0.45);
-  background: rgba(110, 198, 255, 0.08);
-  padding: 5px 14px;
-  border-radius: 999px;
+  color: var(--fondo);
+  background: var(--azul);
+  padding: 4px 14px;
+  border-radius: 4px;
+  box-shadow: 3px 3px 0px var(--rosa);
   margin-bottom: 14px;
 }
 
@@ -66,8 +67,8 @@ h1, h2, h3 {
 }
 
 h1 {
-  font-size: clamp(2rem, 6vw, 2.8rem);
-  color: var(--texto);
+  font-size: clamp(2rem, 6vw, 2.85rem);
+  text-shadow: 2px 2px 0px rgba(244, 143, 177, 0.35);
 }
 
 .separador-arte {
@@ -75,29 +76,47 @@ h1 {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  margin-top: 16px;
+  margin-top: 14px;
 }
 
 .separador-arte span {
-  width: 48px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--rosa), transparent);
-}
-
-.separador-arte i {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
+  width: 56px;
+  height: 2px;
   background: var(--rosa);
 }
 
+.separador-arte i {
+  width: 9px;
+  height: 9px;
+  transform: rotate(45deg);
+  background: var(--verde);
+}
+
 .tarjeta-principal {
-  background: var(--tarjeta);
-  border: 1px solid var(--borde);
-  border-left: 3px solid var(--rosa);
-  border-radius: 16px;
-  padding: 26px 24px;
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
+  background-color: var(--papel);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 27px,
+    rgba(27, 30, 46, 0.08) 28px
+  );
+  color: var(--tinta);
+  border: 2px solid var(--tinta);
+  border-radius: 12px;
+  padding: 28px 24px;
+  box-shadow: 7px 7px 0px var(--rosa);
+  position: relative;
+}
+
+.tarjeta-principal::before {
+  content: "PARA VICO // 19";
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #8c3b58;
+  border-bottom: 2px solid #8c3b58;
+  margin-bottom: 14px;
 }
 
 .texto-carta p + p {
@@ -105,78 +124,150 @@ h1 {
 }
 
 .bloque {
-  margin-top: 44px;
+  margin-top: 48px;
 }
 
 .bloque h2 {
-  font-size: 1.55rem;
+  font-size: 1.65rem;
   margin-bottom: 6px;
 }
 
 .bajada, .pista {
   color: var(--texto-suave);
   font-size: 0.94rem;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
 
 .pista {
   color: var(--verde);
+  font-weight: 500;
 }
 
 .grid-sobres {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(152px, 1fr));
+  gap: 16px;
 }
 
 .sobre {
-  background: var(--tarjeta);
-  border: 1px solid var(--borde);
-  border-radius: 14px;
-  padding: 20px;
-  text-align: left;
-  color: var(--texto);
+  position: relative;
+  min-height: 168px;
+  background: linear-gradient(165deg, var(--papel) 55%, #e8d9c5 100%);
+  border: 2px solid #c9b69f;
+  border-radius: 8px;
+  padding: 96px 10px 12px;
+  text-align: center;
+  color: var(--tinta);
   cursor: pointer;
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  overflow: hidden;
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.45);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .sobre:hover, .sobre:focus-visible {
-  transform: translateY(-3px);
-  border-color: var(--rosa);
+  transform: translateY(-4px) rotate(-1deg);
+  box-shadow: 6px 6px 0px var(--azul);
   outline: none;
 }
 
-.sobre small {
-  display: block;
-  color: var(--rosa);
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-bottom: 6px;
+.sobre-pliegues {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(32deg, rgba(168, 146, 120, 0.28) 49%, transparent 50%),
+    linear-gradient(-32deg, rgba(168, 146, 120, 0.28) 49%, transparent 50%);
+  pointer-events: none;
+}
+
+.sobre-solapa {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 84px;
+  background: var(--papel-solapa);
+  clip-path: polygon(0 0, 50% 92%, 100% 0);
+  border-top: 2px solid #d5c3ad;
+  transform-origin: top center;
+  transition: transform 0.25s ease;
+  z-index: 1;
+}
+
+.sobre:hover .sobre-solapa {
+  transform: scaleY(0.84);
+}
+
+.sello-lacre {
+  position: absolute;
+  top: 72px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #c94a78;
+  color: #fff8f2;
+  font-family: 'Playfair Display', serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed rgba(255, 255, 255, 0.65);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.35);
+  z-index: 2;
+}
+
+.sobre:nth-child(3n + 2) .sello-lacre {
+  background: #2f7db3;
+}
+
+.sobre:nth-child(3n + 3) .sello-lacre {
+  background: #2e8b64;
 }
 
 .sobre strong {
-  font-size: 1.02rem;
+  position: relative;
+  z-index: 2;
+  display: block;
+  font-size: 0.82rem;
   font-weight: 600;
+  line-height: 1.28;
+  color: var(--tinta);
+}
+
+.sobre.abierto {
+  opacity: 0.82;
+}
+
+.sobre.abierto::after {
+  content: "Abierta";
+  position: absolute;
+  bottom: 4px;
+  right: 6px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #7d6b57;
 }
 
 .marco-spotify {
-  border-radius: 14px;
+  border-radius: 12px;
   overflow: hidden;
-  border: 1px solid var(--borde);
+  border: 2px solid var(--azul);
+  box-shadow: 6px 6px 0px var(--verde);
   background: var(--tarjeta);
 }
 
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(9, 10, 16, 0.82);
+  background: rgba(8, 9, 15, 0.85);
   backdrop-filter: blur(4px);
   display: none;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 18px;
   z-index: 50;
 }
 
@@ -185,30 +276,39 @@ h1 {
 }
 
 .modal-caja {
-  background: var(--tarjeta);
-  border: 1px solid var(--rosa);
-  border-radius: 16px;
+  background-color: var(--papel);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 27px,
+    rgba(27, 30, 46, 0.08) 28px
+  );
+  color: var(--tinta);
+  border: 2px solid var(--tinta);
+  box-shadow: 7px 7px 0px var(--azul);
+  border-radius: 12px;
   max-width: 540px;
   width: 100%;
   max-height: 82vh;
   overflow-y: auto;
-  padding: 26px 24px;
+  padding: 26px 22px;
   position: relative;
 }
 
 .modal-caja h3 {
-  font-size: 1.45rem;
+  font-size: 1.4rem;
   margin-bottom: 14px;
+  color: var(--tinta);
 }
 
 .btn-cerrar {
   float: right;
-  background: rgba(244, 143, 177, 0.14);
-  color: var(--rosa);
-  border: 1px solid rgba(244, 143, 177, 0.4);
-  border-radius: 8px;
-  padding: 5px 12px;
-  font-size: 0.82rem;
+  background: var(--tinta);
+  color: var(--papel);
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
 }
