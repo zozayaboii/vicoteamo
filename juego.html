@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Minijuego // 19 Notas para Vico</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --fondo: #0e1018;
+      --tarjeta: #171a26;
+      --papel: #f4eadc;
+      --tinta: #1b1e2e;
+      --texto: #f5f1ec;
+      --rosa: #f48fb1;
+      --azul: #6ec6ff;
+      --verde: #69d2a0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--fondo);
+      background-image:
+        radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+        radial-gradient(circle at 20% 20%, rgba(244, 143, 177, 0.15), transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(110, 198, 255, 0.15), transparent 40%);
+      background-size: 22px 22px, 100% 100%, 100% 100%;
+      color: var(--texto);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    .barra-superior {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 10px;
+    }
+
+    .btn-volver {
+      text-decoration: none;
+      background: var(--tarjeta);
+      color: var(--texto);
+      border: 1.5px solid var(--azul);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .marcadores {
+      display: flex;
+      gap: 10px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .pill {
+      background: var(--tarjeta);
+      border: 1.5px solid var(--rosa);
+      padding: 5px 12px;
+      border-radius: 999px;
+    }
+
+    .pill.vidas {
+      border-color: var(--verde);
+      color: var(--verde);
+    }
+
+    .contenedor-juego {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+      flex: 1;
+      max-height: 640px;
+      background: rgba(23, 26, 38, 0.85);
+      border: 2px solid var(--rosa);
+      box-shadow: 6px 6px 0px var(--azul);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+
+    .capa-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(14, 16, 24, 0.88);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+      z-index: 10;
+    }
+
+    .capa-overlay.oculto {
+      display: none;
+    }
+
+    .capa-overlay h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+
+    .capa-overlay p {
+      color: #bcc2d6;
+      font-size: 0.92rem;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      max-width: 340px;
+    }
+
+    .btn-jugar {
+      background: var(--rosa);
+      color: var(--tinta);
+      border: 2px solid var(--tinta);
+      box-shadow: 4px 4px 0px var(--verde);
+      border-radius: 10px;
+      padding: 12px 24px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .carta-secreta {
+      background-color: var(--papel);
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 25px,
+        rgba(27, 30, 46, 0.08) 26px
+      );
+      color: var(--tinta);
+      border: 2px solid var(--tinta);
+      box-shadow: 6px 6px 0px var(--verde);
+      border-radius: 12px;
+      padding: 22px 18px;
+      text-align: left;
+      max-width: 380px;
+      width: 100%;
+      margin-bottom: 18px;
+      max-height: 65vh;
+      overflow-y: auto;
+    }
+
+    .carta-secreta small {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #8c3b58;
+      border-bottom: 2px solid #8c3b58;
+      margin-bottom: 10px;
+    }
+
+    .carta-secreta h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      margin-bottom: 10px;
+    }
+
+    .carta-secreta p {
+      color: var(--tinta);
+      font-size: 0.92rem;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="barra-superior">
+    <a href="index.html" class="btn-volver">Volver</a>
+    <div class="marcadores">
+      <div class="pill">Notas: <span id="puntos">0</span> / 19</div>
+      <div class="pill vidas">Vidas: <span id="vidas">3</span></div>
+    </div>
+  </div>
+
+  <div class="contenedor-juego" id="caja-juego">
+    <canvas id="canvas-juego"></canvas>
+
+    <!-- Pantalla inicial -->
+    <div class="capa-overlay" id="pantalla-inicio">
+      <h1>19 Notas para Vico</h1>
+      <p>Deslizá el dedo para mover el clarinete. Atrapá las notas y gotas de color hasta llegar a 19 puntos, y esquivá las manchas de tinta.</p>
+      <button type="button" class="btn-jugar" id="btn-iniciar">Empezar</button>
+    </div>
+
+    <!-- Pantalla de derrota -->
+    <div class="capa-overlay oculto" id="pantalla-perdiste">
+      <h1>Se manchó la partitura</h1>
+      <p>Te quedaste sin vidas, pero podés intentarlo de nuevo para desbloquear el sobre secreto.</p>
+      <button type="button" class="btn-jugar" id="btn-reintentar">Jugar otra vez</button>
+    </div>
+
+    <!-- Pantalla de victoria con carta oculta -->
+    <div class="capa-overlay oculto" id="pantalla-ganaste">
+      <div class="carta-secreta">
+        <small>Sobre secreto desbloqueado // 19 pts</small>
+        <h2 id="titulo-secreto"></h2>
+        <div id="texto-secreto"></div>
+      </div>
+      <button type="button" class="btn-jugar" id="btn-jugar-nuevo">Jugar de nuevo</button>
+    </div>
+  </div>
+
+  <script>
+    // Editá acá el mensaje secreto que se desbloquea al llegar a 19 puntos:
+    const RECOMPENSA = {
+      titulo: "Te ganaste el sobre oculto",
+      texto: `Si llegaste hasta acá es porque tenés buenos reflejos (o mucha paciencia con mi jueguito).
+
+Solo quería dejarte un extra escondido para decirte que sos lo mejor que me pasó y que ojalá estos 19 te traigan muchas felicidades, ah re pesada perdón 😭
+Ah y si me pasas tu alias en estos dias te llega una transferencia mia
+Vale extra: cuando nos veamos, este sobre se canjea por lo que vos elijas hacer ese día. Te amo mucho, Vico <3`
+    };
+
+    const META_PUNTOS = 19;
+    const canvas = document.getElementById("canvas-juego");
+    const ctx = canvas.getContext("2d");
+    const caja = document.getElementById("caja-juego");
+
+    const elPuntos = document.getElementById("puntos");
+    const elVidas = document.getElementById("vidas");
+    const pantallaInicio = document.getElementById("pantalla-inicio");
+    const pantallaPerdiste = document.getElementById("pantalla-perdiste");
+    const pantallaGanaste = document.getElementById("pantalla-ganaste");
+
+    document.getElementById("titulo-secreto").textContent = RECOMPENSA.titulo;
+    const contTexto = document.getElementById("texto-secreto");
+    RECOMPENSA.texto.split("\n\n").forEach((parrafo) => {
+      const p = document.createElement("p");
+      p.textContent = parrafo.trim();
+      contTexto.appendChild(p);
+    });
+
+    let ancho = 360;
+    let alto = 560;
+    let puntos = 0;
+    let vidas = 3;
+    let jugando = false;
+    let objetos = [];
+    let ultimoSpawn = 0;
+    let animId = null;
+
+    const clarinete = {
+      x: 180,
+      y: 500,
+      ancho: 118,
+      alto: 22
+    };
+
+    function ajustarCanvas() {
+      ancho = caja.clientWidth;
+      alto = caja.clientHeight;
+      canvas.width = ancho;
+      canvas.height = alto;
+      clarinete.y = alto - 48;
+      if (clarinete.x > ancho - clarinete.ancho / 2) {
+        clarinete.x = ancho / 2;
+      }
+    }
+
+    window.addEventListener("resize", ajustarCanvas);
+    ajustarCanvas();
+
+    function moverClarinete(clientX) {
+      const rect = canvas.getBoundingClientRect();
+      let nuevaX = clientX - rect.left;
+      const mitad = clarinete.ancho / 2;
+      if (nuevaX < mitad) nuevaX = mitad;
+      if (nuevaX > ancho - mitad) nuevaX = ancho - mitad;
+      clarinete.x = nuevaX;
+    }
+
+    canvas.addEventListener("pointerdown", (e) => {
+      if (jugando) moverClarinete(e.clientX);
+    });
+
+    canvas.addEventListener("pointermove", (e) => {
+      if (jugando) moverClarinete(e.clientX);
+    });
+
+    function dibujarClarinete() {
+      const x = clarinete.x - clarinete.ancho / 2;
+      const y = clarinete.y;
+      const w = clarinete.ancho;
+      const h = clarinete.alto;
+
+      ctx.save();
+      // Brillo suave alrededor
+      ctx.shadowColor = "rgba(110, 198, 255, 0.45)";
+      ctx.shadowBlur = 10;
+
+      // Cuerpo principal de madera oscura
+      ctx.fillStyle = "#141722";
+      ctx.strokeStyle = "#6ec6ff";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.roundRect(x + 14, y + 5, w - 34, h - 10, 4);
+      ctx.fill();
+      ctx.stroke();
+
+      // Boquilla (izquierda)
+      ctx.fillStyle = "#252a3d";
+      ctx.beginPath();
+      ctx.moveTo(x, y + 8);
+      ctx.lineTo(x + 16, y + 5);
+      ctx.lineTo(x + 16, y + h - 5);
+      ctx.lineTo(x, y + h - 8);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // Campana (derecha)
+      ctx.fillStyle = "#141722";
+      ctx.beginPath();
+      ctx.moveTo(x + w - 22, y + 5);
+      ctx.lineTo(x + w, y + 1);
+      ctx.lineTo(x + w, y + h - 1);
+      ctx.lineTo(x + w - 22, y + h - 5);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // Anillos y llaves plateadas
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = "#f4eadc";
+      for (let i = 24; i < w - 28; i += 13) {
+        ctx.beginPath();
+        ctx.arc(x + i, y + h / 2, 2.6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.fillRect(x + 15, y + 4, 2.5, h - 8);
+      ctx.fillRect(x + w - 23, y + 4, 2.5, h - 8);
+      ctx.restore();
+    }
+
+    function crearObjeto() {
+      const colores = ["#f48fb1", "#6ec6ff", "#69d2a0"];
+      const azar = Math.random();
+      let tipo = "nota"; // +1 punto
+      if (azar > 0.72) tipo = "tinta"; // -1 vida
+      else if (azar > 0.52) tipo = "gota"; // +2 puntos
+
+      objetos.push({
+        x: 24 + Math.random() * (ancho - 48),
+        y: -25,
+        radio: 14,
+        vel: 2.5 + Math.random() * 2.2 + (puntos * 0.06),
+        tipo: tipo,
+        color: colores[Math.floor(Math.random() * colores.length)]
+      });
+    }
+
+    function dibujarObjeto(obj) {
+      ctx.save();
+      ctx.translate(obj.x, obj.y);
+
+      if (obj.tipo === "nota") {
+        ctx.fillStyle = obj.color;
+        ctx.strokeStyle = obj.color;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.ellipse(-3, 5, 6, 4.5, -0.35, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(2, 5);
+        ctx.lineTo(2, -11);
+        ctx.lineTo(10, -7);
+        ctx.stroke();
+      } else if (obj.tipo === "gota") {
+        ctx.fillStyle = obj.color;
+        ctx.beginPath();
+        ctx.moveTo(0, -11);
+        ctx.bezierCurveTo(9, -1, 9, 10, 0, 10);
+        ctx.bezierCurveTo(-9, 10, -9, -1, 0, -11);
+        ctx.fill();
+        // Destello blanco
+        ctx.fillStyle = "rgba(255,255,255,0.65)";
+        ctx.beginPath();
+        ctx.arc(-2.5, 3, 2, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        // Mancha de tinta oscura
+        ctx.fillStyle = "#100814";
+        ctx.strokeStyle = "#f48fb1";
+        ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.arc(0, 0, 10, 0, Math.PI * 2);
+        ctx.arc(-8, -4, 4.5, 0, Math.PI * 2);
+        ctx.arc(8, 3, 5, 0, Math.PI * 2);
+        ctx.arc(3, -8, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+
+    function hayColision(obj) {
+      const izq = clarinete.x - clarinete.ancho / 2;
+      const der = clarinete.x + clarinete.ancho / 2;
+      const sup = clarinete.y;
+      const inf = clarinete.y + clarinete.alto;
+
+      return (
+        obj.x + obj.radio > izq &&
+        obj.x - obj.radio < der &&
+        obj.y + obj.radio > sup &&
+        obj.y - obj.radio < inf
+      );
+    }
+
+    function bucle(tiempo) {
+      if (!jugando) return;
+
+      ctx.clearRect(0, 0, ancho, alto);
+
+      if (tiempo - ultimoSpawn > 680) {
+        crearObjeto();
+        ultimoSpawn = tiempo;
+      }
+
+      dibujarClarinete();
+
+      for (let i = objetos.length - 1; i >= 0; i--) {
+        const obj = objetos[i];
+        obj.y += obj.vel;
+        dibujarObjeto(obj);
+
+        if (hayColision(obj)) {
+          if (obj.tipo === "tinta") {
+            vidas--;
+            elVidas.textContent = vidas;
+          } else {
+            puntos += obj.tipo === "gota" ? 2 : 1;
+            if (puntos > META_PUNTOS) puntos = META_PUNTOS;
+            elPuntos.textContent = puntos;
+          }
+          objetos.splice(i, 1);
+
+          if (vidas <= 0) {
+            jugando = false;
+            pantallaPerdiste.classList.remove("oculto");
+            return;
+          }
+
+          if (puntos >= META_PUNTOS) {
+            jugando = false;
+            pantallaGanaste.classList.remove("oculto");
+            return;
+          }
+        } else if (obj.y > alto + 30) {
+          objetos.splice(i, 1);
+        }
+      }
+
+      animId = requestAnimationFrame(bucle);
+    }
+
+    function iniciarPartida() {
+      ajustarCanvas();
+      puntos = 0;
+      vidas = 3;
+      objetos = [];
+      ultimoSpawn = 0;
+      elPuntos.textContent = "0";
+      elVidas.textContent = "3";
+
+      pantallaInicio.classList.add("oculto");
+      pantallaPerdiste.classList.add("oculto");
+      pantallaGanaste.classList.add("oculto");
+
+      jugando = true;
+      if (animId) cancelAnimationFrame(animId);
+      animId = requestAnimationFrame(bucle);
+    }
+
+    document.getElementById("btn-iniciar").addEventListener("click", iniciarPartida);
+    document.getElementById("btn-reintentar").addEventListener("click", iniciarPartida);
+    document.getElementById("btn-jugar-nuevo").addEventListener("click", iniciarPartida);
+  </script>
+</body>
+</html>
